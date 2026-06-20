@@ -1,112 +1,91 @@
 const fs = require('fs');
 const path = require('path');
 
-// Base de dados com as informações reais para popular o catálogo dinamicamente
-const dadosModelos = [
-    { local: "DAIA, Anápolis // Eixo BR-060", nome: "Nave Logística Triple A Premium", m2: "22.000", peso: "7", kva: "750", eixo: "45 km", preco: 145000, desc: "Pé-direito de 12 metros livres, docas com niveladores automáticos e sistema de proteção J4." },
-    { local: "Perimetral Norte, Goiânia // Setor Goiânia 2", nome: "Centro Logístico Last Mile", m2: "3.100", peso: "5", kva: "75", eixo: "6.2 km", preco: 36000, desc: "Ideal para e-commerce rápido, distribuição urbana direta e cross-docking ágil." },
-    { local: "Bairro Feliz, Goiânia // Proximidade Centro", nome: "Galpão Comercial de Matriz", m2: "1.800", peso: "6", kva: "150", eixo: "2.5 km", preco: 22000, desc: "Excelente vão livre sem colunas, pátio frontal murado de brita e portões de segurança duplos." },
-    { local: "Distrito Industrial, Aparecida de Goiânia", nome: "Terminal de Cargas e Armazenamento", m2: "4.500", peso: "6", kva: "300", eixo: "12 km", preco: 55000, desc: "Pátio externo asfaltado com 4.000m² para manobra de bitrens e carretas pesadas de grade alta." },
-    { local: "Vila Brasília, Aparecida de Goiânia", nome: "Módulo Comercial de Distribuição", m2: "1.200", peso: "4", kva: "45", eixo: "4.8 km", preco: 18000, desc: "Próximo aos principais eixos atacadistas de Goiânia. Escritórios climatizados e mezanino estruturado." },
-    { local: "Anel Viário, Senador Canedo", nome: "Complexo Químico / Farmacêutico", m2: "8.000", peso: "6", kva: "500", eixo: "19 km", preco: 95000, desc: "Piso impermeabilizado com resina epóxi de alta densidade e reservatório de água pressurizado." },
-    { local: "GO-060, Saída para Trindade", nome: "Showroom / Depósito Comercial", m2: "2.100", peso: "5", kva: "112", eixo: "8.5 km", preco: 29000, desc: "Fachada com vidros temperados refletivos e excelente visibilidade em rodovia de tráfego intenso." },
-    { local: "Jardim Guanabara, Goiânia", nome: "Módulo Aeroporto Hub", m2: "3.400", peso: "5", kva: "150", eixo: "1.5 km", preco: 42000, desc: "Perfeito para operadores aéreos logísticos. Ampla área administrativa integrada." },
-    { local: "Setor Sul, Goiânia", nome: "Depósito de Distribuição Compacto", m2: "750", peso: "3", kva: "30", axis: "0.5 km", preco: 12500, desc: "Docas para vans e furgões pequenos. Ideal para pequenas transportadoras urbanas." },
-    { local: "BR-153, Aparecida de Goiânia", nome: "Mega Centro Logístico Multidocas", m2: "15.000", peso: "6", kva: "450", eixo: "10 km", preco: 210000, desc: "Portaria blindada 24h, bolsão externo para carretas e cross-docking completo com mais de 20 docas." }
+// Base de dados genérica que o script usará para espelhar os 100 anúncios variando IDs e fotos
+const catalogTemplates = [
+    { loc: "DAIA, Anápolis // Eixo BR-060", nome: "Nave Logística Triple A Premium", desc: "Pé-direito de 12 metros livres, docas com niveladores automáticos e proteção contra incêndio J4.", m2: "22.000", peso: "7", preco: 145000 },
+    { loc: "Perimetral Norte, Goiânia", nome: "Centro Logístico Last Mile Urbano", desc: "Ideal para e-commerce rápido, distribuição urbana direta e cross-docking ágil.", m2: "3.100", peso: "5", preco: 36000 },
+    { loc: "Bairro Feliz, Goiânia", nome: "Galpão Comercial de Matriz", desc: "Excelente vão livre sem colunas, pátio frontal murado de brita e portões de segurança duplos.", m2: "1.800", peso: "6", preco: 22000 },
+    { loc: "Distrito Industrial, Aparecida", nome: "Terminal de Cargas e Armazenamento", desc: "Pátio externo asfaltado com 4.000m² para manobra de bitrens e carretas pesadas.", m2: "4.500", peso: "6", preco: 55000 },
+    { loc: "Vila Brasília, Aparecida", nome: "Módulo Comercial de Distribuição", desc: "Próximo aos principais eixos atacadistas. Escritórios climatizados e mezanino.", m2: "1.200", peso: "4", preco: 18000 },
+    { loc: "Anel Viário, Senador Canedo", nome: "Complexo Químico e Farmacêutico", desc: "Piso impermeabilizado com resina epóxi e reservatório pressurizado.", m2: "8.000", peso: "6", preco: 95000 },
+    { loc: "GO-060, Saída para Trindade", nome: "Showroom / Depósito Comercial", desc: "Fachada com vidros temperados refletivos e excelente visibilidade em rodovia.", m2: "2.100", peso: "5", preco: 29000 },
+    { loc: "Jardim Guanabara, Goiânia", nome: "Módulo Aeroporto Hub Cargas", desc: "Perfeito para operadores aéreos logísticos com ampla área administrativa.", m2: "3.400", peso: "5", preco: 42000 },
+    { loc: "Setor Sul, Goiânia", nome: "Depósito de Distribuição Compacto", desc: "Docas para vans e furgões pequenos. Ideal para e-commerce urbano rápido.", m2: "750", peso: "3", preco: 12500 },
+    { loc: "BR-153, Aparecida", nome: "Mega Centro Logístico Multidocas", desc: "Portaria blindada 24h, pátio para carretas e cross-docking completo.", m2: "15.000", peso: "6", preco: 210000 }
 ];
 
-// Monta o array exato de 100 anúncios calculando a sequência matemática de 1.jpg até 300.jpg (3 fotos por card)
-let todosAnuncios = [];
-let contadorFoto = 1;
-
-for (let i = 1; i <= 100; i++) {
-    let modelo = dadosModelos[(i - 1) % dadosModelos.length];
-    todosAnuncios.push({
-        id: i,
-        local: modelo.local,
-        nome: `${modelo.nome} #Ref ${String(i).padStart(3, '0')}`,
-        m2: modelo.m2,
-        peso: modelo.peso,
-        kva: modelo.kva,
-        eixo: modelo.eixo || "10 km",
-        preco: modelo.preco,
-        desc: modelo.desc,
-        fotos: [
-            `images/${contadorFoto++}.jpg`,
-            `images/${contadorFoto++}.jpg`,
-            `images/${contadorFoto++}.jpg`
-        ]
-    });
-}
-
-// Função geradora de template HTML limpo com CSS e Scripts Inline
-function compilarPaginaHtml(numeroPagina, anunciosPagina) {
+// Gera as 10 páginas do sistema Multi-Page
+for (let pageNum = 1; pageNum <= 10; pageNum++) {
+    const fileName = pageNum === 1 ? 'index.html' : `page${pageNum}.html`;
     
-    // Monta os links corretos de paginação (index.html para a 1, e paginaX.html para o resto)
-    let botoesPaginacao = '';
+    // Calcula o sequencial exato das fotos de 3 em 3 para os 10 cards da página atual
+    let cardsHtml = '';
+    const startImgIndex = (pageNum - 1) * 30 + 1;
+
+    for (let i = 0; i < 10; i++) {
+        const anuncioId = (pageNum - 1) * 10 + (i + 1);
+        const template = catalogTemplates[i];
+        
+        // Fotos sequenciais sem pular nenhuma (Ex: Card 1 -> 1,2,3; Card 2 -> 4,5,6...)
+        const img1 = startImgIndex + (i * 3);
+        const img2 = img1 + 1;
+        const img3 = img1 + 2;
+
+        cardsHtml += `
+                <div class="bg-white rounded-2xl overflow-hidden border border-goiania-cardBorder shadow-sm hover:shadow-xl hover:border-goiania-yellow transition-all flex flex-col justify-between" data-price="${template.preco}">
+                    <div>
+                        <div class="relative aspect-[4/3] bg-slate-100 overflow-hidden">
+                            <img src="images/${img1}.jpg" class="w-full h-full object-cover" onerror="this.src='images/hero.jpg'">
+                        </div>
+                        <div class="px-4 pt-2 grid grid-cols-2 gap-1">
+                            <div class="aspect-[4/3] bg-slate-200 rounded overflow-hidden">
+                                <img src="images/${img2}.jpg" class="w-full h-full object-cover" onerror="this.src='images/hero.jpg'">
+                            </div>
+                            <div class="aspect-[4/3] bg-slate-200 rounded overflow-hidden">
+                                <img src="images/${img3}.jpg" class="w-full h-full object-cover" onerror="this.src='images/hero.jpg'">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-4 space-y-3">
+                        <div>
+                            <span class="text-[9px] font-black text-zinc-400 uppercase block">${template.loc}</span>
+                            <h3 class="text-sm font-bold uppercase text-goiania-dark line-clamp-1">${template.nome} #${String(anuncioId).padStart(3, '0')}</h3>
+                            <p class="text-xs text-slate-500 line-clamp-2">${template.desc}</p>
+                            <div class="grid grid-cols-2 gap-2 pt-2 text-[10px] font-bold text-slate-600">
+                                <div><i class="fa-solid fa-chart-area text-goiania-yellowDark mr-1"></i>${template.m2} m²</div>
+                                <div><i class="fa-solid fa-weight-hanging text-goiania-yellowDark mr-1"></i>${template.peso} Ton/m²</div>
+                            </div>
+                        </div>
+                        <div class="pt-3 border-t border-slate-100 flex items-center justify-between">
+                            <div>
+                                <span class="block text-[8px] font-bold text-zinc-400 uppercase">Locação</span>
+                                <span class="text-sm font-black text-goiania-dark">R$ ${template.preco.toLocaleString('pt-BR')}</span>
+                            </div>
+                            <a href="https://wa.me/5562999999999?text=Olá, tenho interesse no Galpão Ref #${anuncioId}" target="_blank" class="bg-goiania-dark text-white text-xs font-bold px-3 py-2 rounded-xl hover:bg-goiania-yellow hover:text-goiania-dark transition-colors">Contato</a>
+                        </div>
+                    </div>
+                </div>`;
+    }
+
+    // Gera os botões de paginação marcando a página ativa com amarelo ouro
+    let paginationHtml = '';
     for (let p = 1; p <= 10; p++) {
-        let linkDestino = p === 1 ? 'index.html' : `pagina${p}.html`;
-        if (p === numeroPagina) {
-            botoesPaginacao += `
-                <a href="${linkDestino}" class="bg-[#FFD700] text-[#0D1117] font-black px-4 py-2 rounded-xl text-xs border border-[#FFD700] shadow-md transition-all">${p}</a>
-            `;
+        const targetTarget = p === 1 ? 'index.html' : `page${p}.html`;
+        if (p === pageNum) {
+            paginationHtml += `<a href="${targetTarget}" class="bg-[#FFD700] text-[#0D1117] font-black px-4 py-2 rounded-xl text-xs border border-[#FFD700] shadow-sm">${p}</a>\n`;
         } else {
-            botoesPaginacao += `
-                <a href="${linkDestino}" class="bg-white hover:bg-zinc-100 text-slate-800 font-bold px-4 py-2 rounded-xl text-xs border border-slate-200 transition-all">${p}</a>
-            `;
+            paginationHtml += `<a href="${targetTarget}" class="bg-white hover:bg-zinc-100 text-slate-800 font-bold px-4 py-2 rounded-xl text-xs border border-slate-200 transition-all">${p}</a>\n`;
         }
     }
 
-    // Gera o Grid de cards injetando dinamicamente os caminhos matemáticos das fotos
-    let gradeCards = anunciosPagina.map(anuncio => `
-        <div class="bg-white rounded-2xl overflow-hidden border border-[#E2E8F0] shadow-sm hover:shadow-xl hover:border-[#FFD700] transition-all duration-300 flex flex-col justify-between group" data-price="${anuncio.preco}">
-            <div class="space-y-1">
-                <div class="relative aspect-[4/3] bg-slate-100 overflow-hidden">
-                    <img src="${anuncio.fotos[0]}" alt="Foto principal" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='images/hero.jpg'">
-                    <span class="absolute top-2 right-2 bg-emerald-500 text-white text-[9px] font-bold uppercase px-2 py-0.5 rounded shadow-sm tracking-wider">Disponível</span>
-                </div>
-                <div class="px-4 pt-2 grid grid-cols-2 gap-1">
-                    <div class="aspect-[4/3] bg-slate-200 rounded overflow-hidden">
-                        <img src="${anuncio.fotos[1]}" class="w-full h-full object-cover" onerror="this.src='images/hero.jpg'">
-                    </div>
-                    <div class="aspect-[4/3] bg-slate-200 rounded overflow-hidden">
-                        <img src="${anuncio.fotos[2]}" class="w-full h-full object-cover" onerror="this.src='images/hero.jpg'">
-                    </div>
-                </div>
-            </div>
-            <div class="p-4 space-y-3 flex-grow flex flex-col justify-between mt-1">
-                <div class="space-y-1">
-                    <span class="text-[9px] font-black tracking-widest text-zinc-400 uppercase block">${anuncio.local}</span>
-                    <h3 class="text-sm font-bold uppercase text-[#0D1117] tracking-tight line-clamp-1">${anuncio.nome}</h3>
-                    <p class="text-xs text-slate-500 font-medium line-clamp-2">${anuncio.desc}</p>
-                    
-                    <div class="grid grid-cols-2 gap-y-1.5 gap-x-2 pt-2 text-[10px] font-bold text-slate-600">
-                        <div><i class="fa-solid fa-chart-area text-[#E6C200] mr-1"></i>${anuncio.m2} m²</div>
-                        <div><i class="fa-solid fa-weight-hanging text-[#E6C200] mr-1"></i>${anuncio.peso} Ton/m²</div>
-                        <div><i class="fa-solid fa-bolt text-[#E6C200] mr-1"></i>${anuncio.kva} KVA</div>
-                        <div><i class="fa-solid fa-route text-[#E6C200] mr-1"></i>Eixo: ${anuncio.eixo}</div>
-                    </div>
-                </div>
-                
-                <div class="pt-3 border-t border-slate-100 flex items-center justify-between mt-auto">
-                    <div class="space-y-0.5">
-                        <span class="block text-[8px] font-bold uppercase text-zinc-400">Locação Mensal</span>
-                        <span class="text-sm font-black text-[#0D1117]">R$ ${anuncio.preco.toLocaleString('pt-BR')}</span>
-                    </div>
-                    <a href="https://wa.me/5562999999999?text=Interesse%20no%20Galpao%20Ref%20${anuncio.id}" target="_blank" class="bg-[#0D1117] hover:bg-[#FFD700] text-white hover:text-[#0D1117] text-xs font-bold px-3 py-2 rounded-xl transition-all">
-                        <i class="fa-brands fa-whatsapp"></i> Falar com Consultor
-                    </a>
-                </div>
-            </div>
-        </div>
-    `).join('');
-
-    return `<!DOCTYPE html>
+    // Template completo do HTML estruturado com CSS e Engine de Filtros Injetados inline
+    const htmlTemplate = `<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Galpões Goiânia v2.0 // Terminal de Negócios Logísticos - Página ${numeroPagina}</title>
+    <title>Galpões Goiânia v2.0 // Página ${pageNum}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -132,7 +111,7 @@ function compilarPaginaHtml(numeroPagina, anunciosPagina) {
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 4px; }
     </style>
 </head>
-<body class="bg-goiania-slateBg text-slate-900 font-sans antialiased min-h-screen flex flex-col selection:bg-goiania-yellow selection:text-goiania-dark">
+<body class="bg-goiania-slateBg text-slate-900 font-sans antialiased min-h-screen flex flex-col selection:bg-goiania-yellow selection:text-goiania-dark custom-scrollbar">
 
     <header class="bg-goiania-dark text-white sticky top-0 z-50 border-b border-zinc-800 shadow-md backdrop-blur-md bg-opacity-95">
         <div class="max-w-[1600px] mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
@@ -142,28 +121,13 @@ function compilarPaginaHtml(numeroPagina, anunciosPagina) {
                 </a>
             </div>
             <nav class="hidden lg:flex items-center gap-8 text-xs font-bold uppercase tracking-widest text-zinc-400">
-                <span class="text-goiania-yellow">Página Atual: ${numeroPagina} / 10</span>
+                <span class="text-goiania-yellow">Página Atual: ${pageNum} / 10</span>
             </nav>
-            <a href="https://wa.me/5562999999999?text=Quero%20anunciar%20meu%20galp%C3%A3o%20na%20plataforma" target="_blank"
-               class="bg-goiania-yellow hover:bg-goiania-yellowDark text-goiania-dark font-black px-5 py-2 rounded-lg text-xs uppercase transition-all duration-200 transform hover:scale-[1.02] tracking-wider">
+            <a href="https://wa.me/5562999999999" target="_blank" class="bg-goiania-yellow hover:bg-goiania-yellowDark text-goiania-dark font-black px-5 py-2 rounded-lg text-xs uppercase transition-all tracking-wider">
                 Anunciar Imóvel
             </a>
         </div>
     </header>
-
-    <section class="hero-section" style="background: linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.65)), url('images/hero.jpg') no-repeat center center/cover; min-height: 45vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 40px 20px; color: #ffffff;">
-        <div class="hero-content" style="max-width: 900px; width: 100%;">
-            <span style="background-color: rgba(255, 193, 7, 0.2); color: #ffc107; padding: 6px 16px; border-radius: 20px; font-size: 11pt; font-weight: bold; letter-spacing: 2px; text-transform: uppercase; border: 1px solid rgba(255, 193, 7, 0.4);">
-                Logística de Alta Performance
-            </span>
-            <h1 style="font-size: 28pt; font-weight: 900; text-transform: uppercase; margin: 21px 0 12px 0; line-height: 1.2; letter-spacing: 1px; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);">
-                Infraestrutura Industrial Estratégica
-            </h1>
-            <p style="font-size: 13pt; color: #e0e0e0; max-width: 650px; margin: 0 auto; line-height: 1.5; text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);">
-                Filtragem instantânea local da página ${numeroPagina} — Catálogo Estático Otimizado sem Erros.
-            </p>
-        </div>
-    </section>
 
     <main class="max-w-[1600px] mx-auto px-4 sm:px-6 py-8 grid grid-cols-1 lg:grid-cols-4 gap-8 flex-grow w-full">
         
@@ -173,16 +137,13 @@ function compilarPaginaHtml(numeroPagina, anunciosPagina) {
                     <i class="fa-solid fa-sliders text-goiania-dark"></i>
                     <h2 class="font-bold text-sm uppercase text-goiania-dark tracking-wide">Refinar Painel</h2>
                 </div>
-
                 <div class="space-y-2">
                     <label class="block text-[10px] font-bold uppercase text-slate-500 tracking-wider">Busca Textual Local</label>
                     <div class="relative">
-                        <input type="text" id="search-input" placeholder="Buscar nesta página..." 
-                               class="w-full pl-3 pr-10 py-3 rounded-xl border border-goiania-cardBorder focus:outline-none focus:border-goiania-dark text-xs bg-slate-50 text-slate-800 font-medium">
+                        <input type="text" id="search-input" placeholder="Buscar nesta página..." class="w-full pl-3 pr-10 py-3 rounded-xl border border-goiania-cardBorder focus:outline-none focus:border-goiania-dark text-xs bg-slate-50 font-medium">
                         <i class="fa-solid fa-magnifying-glass absolute right-3.5 top-3.5 text-slate-400 text-xs"></i>
                     </div>
                 </div>
-
                 <div class="space-y-2">
                     <label class="block text-[10px] font-bold uppercase text-slate-500 tracking-wider">Locação Teto</label>
                     <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
@@ -198,22 +159,22 @@ function compilarPaginaHtml(numeroPagina, anunciosPagina) {
 
         <section class="lg:col-span-3 space-y-6">
             <div class="bg-white px-5 py-3 rounded-xl border border-goiania-cardBorder shadow-sm flex justify-between items-center">
-                <span class="text-xs font-bold uppercase text-slate-500 tracking-wider"><i class="fa-solid fa-list-check text-goiania-dark mr-1"></i> Terminais Disponíveis</span>
+                <span class="text-xs font-bold uppercase text-slate-500 tracking-wider"><i class="fa-solid fa-list-check text-goiania-dark mr-1"></i> Terminais Disponíveis (Pág ${pageNum})</span>
                 <span class="text-[11px] font-black bg-goiania-dark text-white px-3 py-1 rounded-full" id="counter-display">10 Ativos Exibidos</span>
             </div>
 
             <div id="galpoes-wrapper" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                ${gradeCards}
+                ${cardsHtml}
             </div>
 
             <div class="flex flex-wrap justify-center items-center gap-2 pt-8 border-t border-slate-200">
-                ${botoesPaginacao}
+                ${paginationHtml}
             </div>
         </section>
     </main>
 
     <footer class="bg-goiania-dark text-zinc-500 text-xs py-6 border-t border-zinc-800 text-center mt-auto">
-        <p>© 2026 Galpões Goiânia. Todos os ativos e estilos estruturados inline para máxima fidelidade.</p>
+        <p>© 2026 Galpões Goiânia. Todos os direitos reservados.</p>
     </footer>
 
     <script>
@@ -227,7 +188,6 @@ function compilarPaginaHtml(numeroPagina, anunciosPagina) {
                 this.cards = this.wrapper ? this.wrapper.querySelectorAll("[data-price]") : [];
                 this.init();
             }
-
             init() {
                 if (this.searchInput) this.searchInput.addEventListener("input", () => this.handleFilteringState());
                 if (this.priceRange) {
@@ -238,7 +198,6 @@ function compilarPaginaHtml(numeroPagina, anunciosPagina) {
                     });
                 }
             }
-
             handleFilteringState() {
                 const searchCriteria = this.searchInput.value.toLowerCase().trim();
                 const maxPriceTreshold = parseInt(this.priceRange.value, 10);
@@ -247,7 +206,6 @@ function compilarPaginaHtml(numeroPagina, anunciosPagina) {
                 this.cards.forEach((card) => {
                     const cardInnerContent = card.textContent.toLowerCase();
                     const targetPrice = parseInt(card.getAttribute("data-price") || "0", 10);
-                    
                     const matchesSearch = cardInnerContent.includes(searchCriteria);
                     const matchesPrice = targetPrice <= maxPriceTreshold;
 
@@ -258,31 +216,15 @@ function compilarPaginaHtml(numeroPagina, anunciosPagina) {
                         card.style.display = "none";
                     }
                 });
-
                 this.counterDisplay.textContent = viableMatches + " Ativos Mapeados";
             }
         }
-        document.addEventListener("DOMContentLoaded", () => {
-            new TerminalAtivosEngine();
-        });
+        document.addEventListener("DOMContentLoaded", () => { new TerminalAtivosEngine(); });
     </script>
 </body>
 </html>`;
-}
 
-// Executa a gravação física de todas as 10 páginas HTML na raiz do projeto de forma limpa e automática
-for (let p = 1; p <= 10; p++) {
-    let nomeFinalDoArquivo = p === 1 ? 'index.html' : `pagina${p}.html`;
-    
-    // Divide logicamente o array gigante para ter exatamente 10 anúncios por página HTML
-    let indiceInicio = (p - 1) * 10;
-    let indiceFim = indiceInicio + 10;
-    let dadosDoSegmento = todosAnuncios.slice(indiceInicio, indiceFim);
-    
-    let htmlCompilado = compilarPaginaHtml(p, dadosDoSegmento);
-    
-    fs.writeFileSync(path.join(__dirname, nomeFinalDoArquivo), htmlCompilado, 'utf8');
-    console.log(`[SUCESSO] Gerado com fidelidade estática -> ${nomeFinalDoArquivo}`);
+    fs.writeFileSync(path.join(__dirname, fileName), htmlTemplate, 'utf-8');
+    console.log(`[✓] Sucesso: Arquivo ${fileName} gerado na raiz.`);
 }
-
-console.log("\n[OK!] Sistema MPA completo escrito em disco. Sem scripts perdidos e sem styles.css quebrados!");
+console.log("\n[★] Automação concluída! Todos os 10 arquivos HTML foram gerados sem dependências externas.");

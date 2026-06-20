@@ -3,86 +3,144 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Goiás Fight // Personais de Luta em Goiânia</title>
+    <title>Galpões Goiânia v2.0 // Página 3</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        tailwind.config = {
-            theme: { extend: { colors: { fightDark: '#09090b', fightCard: '#18181b' } } }
-        }
+        tailwind.config = { theme: { extend: { colors: { goiania: { yellow: '#FFD700', yellowDark: '#E6C200', dark: '#0D1117', slateBg: '#F8FAFC', cardBorder: '#E2E8F0' } } } } }
     </script>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #F1F5F9; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 4px; }
+    </style>
 </head>
-<body class="bg-black text-white font-sans antialiased min-h-screen flex flex-col justify-between">
-    
-    <header class="bg-zinc-950 text-white sticky top-0 z-50 border-b border-zinc-800">
-        <div class="max-w-[1600px] mx-auto px-4 h-16 flex items-center justify-between">
-            <div class="flex items-center space-x-3 cursor-pointer" onclick="window.location.href='index.html'">
-                <div class="bg-red-600 text-white p-2 rounded-xl"><i class="fa-solid fa-hand-fist"></i></div>
-                <div class="flex flex-col">
-                    <span class="text-[10px] font-black tracking-widest text-zinc-400 uppercase leading-none">Anúncios Oficiais</span>
-                    <span class="text-sm font-black text-white mt-0.5">GOIÁS FIGHT</span>
-                </div>
-            </div>
-            <a href="https://wa.me/5562999999999" target="_blank" class="bg-red-600 text-white text-[10px] font-black uppercase tracking-widest px-5 py-2.5 rounded-xl hover:bg-red-700 transition-colors">Anunciar Perfil</a>
+<body class="bg-goiania-slateBg text-slate-900 font-sans antialiased min-h-screen flex flex-col custom-scrollbar">
+
+    <header class="bg-goiania-dark text-white sticky top-0 z-50 border-b border-zinc-800 shadow-md backdrop-blur-md bg-opacity-95">
+        <div class="max-w-[1600px] mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
+            <a href="index.html" class="bg-goiania-yellow text-goiania-dark font-black px-3 py-1 rounded text-base sm:text-xl tracking-tighter uppercase block">GALPÕES GOIÂNIA</a>
+            <nav class="hidden lg:flex items-center gap-8 text-xs font-bold uppercase tracking-widest text-zinc-400"><span class="text-goiania-yellow">Página Atual: 3 / 10</span></nav>
+            <a href="https://wa.me/5562999999999" target="_blank" class="bg-goiania-yellow hover:bg-goiania-yellowDark text-goiania-dark font-black px-5 py-2 rounded-lg text-xs uppercase transition-all tracking-wider">Anunciar Imóvel</a>
         </div>
     </header>
 
-    <section class="relative min-h-[30vh] sm:min-h-[40vh] flex items-center justify-center text-center bg-zinc-900 overflow-hidden w-full">
-        <div class="absolute inset-0 z-0 w-full h-full">
-            <img src="images/hero.jpg" alt="Goias Fight Hero Banner" class="w-full h-full object-cover object-center opacity-45">
-        </div>
-        <div class="relative z-10 max-w-4xl mx-auto p-4 space-y-2">
-            <h1 class="text-3xl sm:text-5xl font-black uppercase text-white tracking-tight drop-shadow-md">ENCONTRE SEU PERSONAL FIGHT</h1>
-            <p class="text-xs sm:text-sm text-red-500 font-bold uppercase tracking-widest bg-black/70 inline-block px-4 py-1 rounded-full">Os Melhores Treinadores de Goiânia</p>
-        </div>
-    </section>
-
-    <main class="max-w-[1600px] mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-4 gap-8 flex-grow w-full">
-        <aside class="lg:col-span-1 space-y-6">
-            <div class="bg-zinc-950 p-6 rounded-2xl border border-zinc-800 space-y-6">
-                <div class="flex items-center justify-between border-b pb-4 border-zinc-800">
-                    <h2 class="text-xs font-black uppercase text-white tracking-wider">Filtrar Treinadores</h2>
-                    <span id="counter-display" class="bg-red-600 text-white text-[9px] font-black px-2 py-0.5 rounded-full">Carregando...</span>
+    <main class="max-w-[1600px] mx-auto px-4 sm:px-6 py-8 grid grid-cols-1 lg:grid-cols-4 gap-8 flex-grow w-full">
+        <aside class="lg:col-span-1 space-y-6 h-fit lg:sticky lg:top-24">
+            <div class="bg-white p-5 rounded-2xl border border-goiania-cardBorder shadow-sm space-y-6">
+                <div class="flex items-center gap-2 border-b pb-4 border-slate-100"><i class="fa-solid fa-sliders text-goiania-dark"></i><h2 class="font-bold text-sm uppercase text-goiania-dark tracking-wide">Refinar Painel</h2></div>
+                <div class="space-y-2">
+                    <label class="block text-[10px] font-bold uppercase text-slate-500 tracking-wider">Busca Textual Local</label>
+                    <input type="text" id="search-input" placeholder="Buscar nesta página..." class="w-full pl-3 pr-10 py-3 rounded-xl border border-goiania-cardBorder focus:outline-none focus:border-goiania-dark text-xs bg-slate-50 font-medium">
                 </div>
                 <div class="space-y-2">
-                    <label class="block text-[10px] font-black uppercase text-zinc-400">Busca por Nome ou Bairro</label>
-                    <input type="text" id="search-input" placeholder="Ex: Muay Thai, Setor Bueno..." class="w-full px-3 py-3 rounded-xl border border-zinc-800 text-xs font-bold bg-zinc-900 text-white focus:outline-none focus:border-red-600">
-                </div>
-                <div class="space-y-2">
-                    <label class="block text-[10px] font-black uppercase text-zinc-400">Modalidade Principal</label>
-                    <select id="modalidade-filter" class="w-full px-3 py-3 rounded-xl border border-zinc-800 text-xs font-bold bg-zinc-900 text-white focus:outline-none focus:border-red-600">
-                        <option value="todas">Todas as Modalidades</option>
-                        <option value="Muay Thai">Muay Thai</option>
-                        <option value="Boxe">Boxe</option>
-                        <option value="Jiu-Jitsu">Jiu-Jitsu</option>
-                        <option value="Kickboxing">Kickboxing</option>
-                        <option value="MMA">MMA</option>
-                        <option value="Defesa Pessoal">Defesa Pessoal</option>
-                    </select>
+                    <label class="block text-[10px] font-bold uppercase text-slate-500 tracking-wider">Locação Teto</label>
+                    <input type="range" min="10000" max="250000" step="5000" value="250000" id="price-range" class="w-full accent-goiania-dark cursor-pointer">
+                    <div class="flex justify-between text-[10px] font-bold text-slate-400 mt-2"><span>Mín: R$ 10k</span><span class="text-goiania-dark font-black" id="price-display">R$ 250.000/mês</span></div>
                 </div>
             </div>
         </aside>
 
-        <section class="lg:col-span-3 space-y-8">
-            <div id="fight-wrapper" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6"></div>
-            <div class="flex items-center justify-center gap-1.5 flex-wrap py-6 border-t border-zinc-800 pagination-container"></div>
+        <section class="lg:col-span-3 space-y-6">
+            <div class="bg-white px-5 py-3 rounded-xl border border-goiania-cardBorder shadow-sm flex justify-between items-center">
+                <span class="text-xs font-bold uppercase text-slate-500 tracking-wider"><i class="fa-solid fa-list-check text-goiania-dark mr-1"></i> Terminais Disponíveis (Pág 3)</span>
+                <span class="text-[11px] font-black bg-goiania-dark text-white px-3 py-1 rounded-full" id="counter-display">10 Ativos Exibidos</span>
+            </div>
+
+            <div id="galpoes-wrapper" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                <script>
+                    const p3Data = [
+                        {id:21, loc:"DAIA, Anápolis", nome:"Nave Logística Triple A Premium #021", desc:"Pé-direito de 12 metros livres, docas com niveladores automáticos.", m2:"22.000", peso:"7", preco:145000, f:[61,62,63]},
+                        {id:22, loc:"Perimetral Norte, Goiânia", nome:"Centro Logístico Last Mile Urbano #022", desc:"Ideal para e-commerce rápido, distribuição urbana direta e cross-docking ágil.", m2:"3.100", peso:"5", preco:36000, f:[64,65,66]},
+                        {id:23, loc:"Bairro Feliz, Goiânia", nome:"Galpão Comercial de Matriz #023", desc:"Excelente vão livre sem colunas, pátio frontal murado de brita.", m2:"1.800", peso:"6", preco:22000, f:[67,68,69]},
+                        {id:24, loc:"Distrito Industrial, Aparecida", nome:"Terminal de Cargas e Armazenamento #024", desc:"Pátio externo asfaltado com 4.000m² para manobra de bitrens.", m2:"4.500", peso:"6", preco:55000, f:[70,71,72]},
+                        {id:25, loc:"Vila Brasília, Aparecida", nome:"Módulo Comercial de Distribuição #025", desc:"Próximo aos principais eixos atacadistas. Escritórios climatizados.", m2:"1.200", peso:"4", preco:18000, f:[73,74,75]},
+                        {id:26, loc:"Anel Viário, Senador Canedo", nome:"Complexo Químico e Farmacêutico #026", desc:"Piso impermeabilizado com resina epóxi de alta densidade.", m2:"8.000", peso:"6", preco:95000, f:[76,77,78]},
+                        {id:27, loc:"GO-060, Saída para Trindade", nome:"Showroom / Depósito Comercial #027", desc:"Fachada com vidros temperados refletivos e excelente visibilidade.", m2:"2.100", peso:"5", preco:29000, f:[79,80,81]},
+                        {id:28, loc:"Jardim Guanabara, Goiânia", nome:"Módulo Aeroporto Hub Cargas #028", desc:"Perfeito para operadores aéreos logísticos com ampla área administrativa.", m2:"3.400", peso:"5", preco:42000, f:[82,83,84]},
+                        {id:29, loc:"Setor Sul, Goiânia", nome:"Depósito de Distribuição Compacto #029", desc:"Docas para vans e furgões pequenos. Ideal para pequenas transportadoras.", m2:"750", peso:"3", preco:12500, f:[85,86,87]},
+                        {id:30, loc:"BR-153, Aparecida", nome:"Mega Centro Logístico Multidocas #030", desc:"Portaria blindada 24h, pátio para carretas e cross-docking completo.", m2:"15.000", peso:"6", preco:210000, f:[88,89,90]}
+                    ];
+                    document.write(p3Data.map(a => `
+                        <div class="bg-white rounded-2xl overflow-hidden border border-goiania-cardBorder shadow-sm flex flex-col justify-between" data-price="${a.preco}">
+                            <div>
+                                <div class="relative aspect-[4/3] bg-slate-100 overflow-hidden"><img src="images/${a.f[0]}.jpg" class="w-full h-full object-cover" onerror="this.src='images/hero.jpg'"></div>
+                                <div class="px-4 pt-2 grid grid-cols-2 gap-1">
+                                    <div class="aspect-[4/3] bg-slate-200 rounded overflow-hidden"><img src="images/${a.f[1]}.jpg" class="w-full h-full object-cover" onerror="this.src='images/hero.jpg'"></div>
+                                    <div class="aspect-[4/3] bg-slate-200 rounded overflow-hidden"><img src="images/${a.f[2]}.jpg" class="w-full h-full object-cover" onerror="this.src='images/hero.jpg'"></div>
+                                </div>
+                            </div>
+                            <div class="p-4 space-y-3">
+                                <div>
+                                    <span class="text-[9px] font-black text-zinc-400 uppercase block">${a.loc}</span>
+                                    <h3 class="text-sm font-bold uppercase text-goiania-dark line-clamp-1">${a.nome}</h3>
+                                    <p class="text-xs text-slate-500 line-clamp-2">${a.desc}</p>
+                                    <div class="grid grid-cols-2 gap-2 pt-2 text-[10px] font-bold text-slate-600">
+                                        <div><i class="fa-solid fa-chart-area text-goiania-yellowDark mr-1"></i>${a.m2} m²</div>
+                                        <div><i class="fa-solid fa-weight-hanging text-goiania-yellowDark mr-1"></i>${a.peso} T/m²</div>
+                                    </div>
+                                </div>
+                                <div class="pt-3 border-t border-slate-100 flex items-center justify-between">
+                                    <div><span class="block text-[8px] font-bold text-zinc-400 uppercase">Locação</span><span class="text-sm font-black text-goiania-dark">R$ ${a.preco.toLocaleString('pt-BR')}</span></div>
+                                    <a href="https://wa.me/5562999999999?text=Ref${a.id}" target="_blank" class="bg-goiania-dark text-white text-xs font-bold px-3 py-2 rounded-xl">Contato</a>
+                                }
+                            </div>
+                        </div>
+                    `).join(''));
+                </script>
+            </div>
+
+            <div class="flex flex-wrap justify-center items-center gap-2 pt-8 border-t border-slate-200">
+                <a href="index.html" class="bg-white hover:bg-zinc-100 text-slate-800 font-bold px-4 py-2 rounded-xl text-xs border border-slate-200">1</a>
+                <a href="page2.html" class="bg-white hover:bg-zinc-100 text-slate-800 font-bold px-4 py-2 rounded-xl text-xs border border-slate-200">2</a>
+                <a href="page3.html" class="bg-[#FFD700] text-[#0D1117] font-black px-4 py-2 rounded-xl text-xs border border-[#FFD700] shadow-sm">3</a>
+                <a href="page4.html" class="bg-white hover:bg-zinc-100 text-slate-800 font-bold px-4 py-2 rounded-xl text-xs border border-slate-200">4</a>
+                <a href="page5.html" class="bg-white hover:bg-zinc-100 text-slate-800 font-bold px-4 py-2 rounded-xl text-xs border border-slate-200">5</a>
+                <a href="page6.html" class="bg-white hover:bg-zinc-100 text-slate-800 font-bold px-4 py-2 rounded-xl text-xs border border-slate-200">6</a>
+                <a href="page7.html" class="bg-white hover:bg-zinc-100 text-slate-800 font-bold px-4 py-2 rounded-xl text-xs border border-slate-200">7</a>
+                <a href="page8.html" class="bg-white hover:bg-zinc-100 text-slate-800 font-bold px-4 py-2 rounded-xl text-xs border border-slate-200">8</a>
+                <a href="page9.html" class="bg-white hover:bg-zinc-100 text-slate-800 font-bold px-4 py-2 rounded-xl text-xs border border-slate-200">9</a>
+                <a href="page10.html" class="bg-white hover:bg-zinc-100 text-slate-800 font-bold px-4 py-2 rounded-xl text-xs border border-slate-200">10</a>
+            </div>
         </section>
     </main>
 
-    <div id="fight-modal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[9999] flex justify-center items-center opacity-0 pointer-events-none transition-opacity duration-300 p-4"></div>
-
-    <script src="database.js"></script>
-    <script src="app.js"></script>
     <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const pathName = window.location.pathname.split("/").pop() || "";
-            const pageMatch = pathName.match(/\d+/);
-            const currentPage = pageMatch ? parseInt(pageMatch[0], 10) : 1;
-            
-            if (typeof window.initFightPage === "function") {
-                window.initFightPage(currentPage);
+        class TerminalAtivosEngine {
+            constructor() {
+                this.searchInput = document.getElementById("search-input");
+                this.priceRange = document.getElementById("price-range");
+                this.priceDisplay = document.getElementById("price-display");
+                this.counterDisplay = document.getElementById("counter-display");
+                this.wrapper = document.getElementById("galpoes-wrapper");
+                this.cards = this.wrapper ? this.wrapper.querySelectorAll("[data-price]") : [];
+                this.init();
             }
-        });
+            init() {
+                if (this.searchInput) this.searchInput.addEventListener("input", () => this.handleFilteringState());
+                if (this.priceRange) {
+                    this.priceRange.addEventListener("input", (e) => {
+                        const parsedValue = parseInt(e.target.value, 10);
+                        this.priceDisplay.textContent = "R$ " + parsedValue.toLocaleString('pt-BR') + "/mês";
+                        this.handleFilteringState();
+                    });
+                }
+            }
+            handleFilteringState() {
+                const searchCriteria = this.searchInput.value.toLowerCase().trim();
+                const maxPriceTreshold = parseInt(this.priceRange.value, 10);
+                let viableMatches = 0;
+                this.cards.forEach((card) => {
+                    const cardInnerContent = card.textContent.toLowerCase();
+                    const targetPrice = parseInt(card.getAttribute("data-price") || "0", 10);
+                    if (cardInnerContent.includes(searchCriteria) && targetPrice <= maxPriceTreshold) {
+                        card.style.display = "flex"; viableMatches++;
+                    } else { card.style.display = "none"; }
+                });
+                this.counterDisplay.textContent = viableMatches + " Ativos Mapeados";
+            }
+        }
+        document.addEventListener("DOMContentLoaded", () => { new TerminalAtivosEngine(); });
     </script>
 </body>
 </html>
