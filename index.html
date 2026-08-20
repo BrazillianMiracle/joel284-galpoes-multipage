@@ -31,22 +31,29 @@
 </head>
 <body class="bg-goiania-slateBg text-slate-900 font-sans antialiased min-h-screen flex flex-col selection:bg-goiania-yellow selection:text-goiania-dark custom-scrollbar">
 
-    <header class="bg-goiania-dark text-white sticky top-0 z-50 border-b border-zinc-800 shadow-md backdrop-blur-md bg-opacity-95">
-        <div class="max-w-[1600px] mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
-            <div class="flex items-center gap-3">
-                <a href="index.html" class="bg-goiania-yellow text-goiania-dark font-black px-3 py-1 rounded text-base sm:text-xl tracking-tighter uppercase block">
-                    GALPÕES GOIÂNIA <span class="text-[10px] align-super text-zinc-500">V2</span>
-                </a>
-            </div>
-            <nav class="hidden lg:flex items-center gap-8 text-xs font-bold uppercase tracking-widest text-zinc-400">
-                <span class="text-goiania-yellow">Página Atual: 1 / 10</span>
-            </nav>
-            <a href="https://wa.me/5562999999999" target="_blank" class="bg-goiania-yellow hover:bg-goiania-yellowDark text-goiania-dark font-black px-5 py-2 rounded-lg text-xs uppercase transition-all tracking-wider">
-                Anunciar Imóvel
+    <header class="bg-goiania-dark/95 text-white sticky top-0 z-50 border-b border-zinc-800/80 shadow-xl backdrop-blur-md transition-all duration-300">
+    <div class="max-w-[1600px] mx-auto px-4 sm:px-8 py-4 flex justify-between items-center">
+        <!-- Logotipo com Micro-interação -->
+        <div class="flex items-center gap-3">
+            <a href="index.html" class="bg-goiania-yellow text-goiania-dark font-black px-3.5 py-1.5 rounded-md text-base sm:text-lg tracking-tighter uppercase block shadow-md hover:scale-105 active:scale-95 transition-transform duration-200">
+                GALPÕES GOIÂNIA <span class="text-[10px] align-super text-zinc-700 font-bold ml-0.5">V2</span>
             </a>
         </div>
-    </header>
-
+        
+        <!-- Navegação / Indicador Estilizado -->
+        <nav class="hidden lg:flex items-center gap-8 text-xs font-bold uppercase tracking-widest text-zinc-400">
+            <span class="text-goiania-yellow bg-goiania-yellow/10 px-3 py-1.5 rounded-full border border-goiania-yellow/20 flex items-center gap-2 shadow-inner">
+                <span class="w-2 h-2 rounded-full bg-goiania-yellow animate-pulse"></span>
+                Página Atual: 1 / 10
+            </span>
+        </nav>
+        
+        <!-- Botão CTA de Alta Conversão -->
+        <a href="https://wa.me/5562999999999" target="_blank" rel="noopener noreferrer" class="bg-goiania-yellow hover:bg-goiania-yellowDark text-goiania-dark font-black px-5 py-2.5 rounded-lg text-xs uppercase transition-all tracking-wider shadow-lg hover:shadow-goiania-yellow/20 hover:-translate-y-0.5 active:translate-y-0 flex items-center gap-2">
+            Anunciar Imóvel
+        </a>
+    </div>
+</header>
     <main class="max-w-[1600px] mx-auto px-4 sm:px-6 py-8 grid grid-cols-1 lg:grid-cols-4 gap-8 flex-grow w-full">
         
         <aside class="lg:col-span-1 space-y-6 h-fit lg:sticky lg:top-24">
